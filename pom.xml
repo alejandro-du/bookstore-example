@@ -17,7 +17,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
-        <vaadin.version>15.0.4</vaadin.version>
+        <vaadin.version>16.0-SNAPSHOT</vaadin.version>
     </properties>
 
     <dependencyManagement>
@@ -100,15 +100,15 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-             
+
         <repository>
             <id>vaadin-prereleases</id>
             <url>https://maven.vaadin.com/vaadin-prereleases</url>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
-             
+
     </repositories>
 
     <pluginRepositories>
@@ -202,7 +202,7 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <profile>
             <id>it</id>
             <build>
