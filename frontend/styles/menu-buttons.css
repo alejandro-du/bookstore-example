@@ -1,15 +1,14 @@
-
 /*
 
 Helper styles to make menu buttons look like router links
 
 */
 :host(.menu-button) .vaadin-button-container {
-	justify-content: left;
+    justify-content: flex-start;
 }
 
 :host(.menu-button) {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 [part] ::slotted(iron-icon[icon^="vaadin:"]) {

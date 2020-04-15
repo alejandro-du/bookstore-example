@@ -23,8 +23,7 @@ body {
 }
 
 .menu-header {
-    padding: 11px 16px;
-    padding-left: 32px;
+    padding: 11px 32px;
     font-size: var(--lumo-font-size-l);
 }
 
@@ -37,7 +36,7 @@ body {
     margin: 0 auto;
     padding: 10px 37px;
     transition: transform 300ms;
-    
+
     font-family: var(--lumo-font-family);
     font-size: var(--lumo-font-size-m);
     font-weight: 500;
@@ -49,7 +48,7 @@ body {
 }
 
 .menu-link span {
-    padding-left: 5px;
+    padding: 0 5px;
 }
 
 .menu-button {
@@ -65,6 +64,11 @@ body {
     overflow: auto;
     background: var(--lumo-base-color);
     box-shadow: var(--overlay-box-shadow);
+}
+
+html[dir="rtl"] .product-form {
+    right: auto;
+    left: 0;
 }
 
 .product-form-content {
@@ -84,9 +88,10 @@ body {
         height: var(--lumo-button-size);
         width: var(--lumo-button-size);
     }
-    
+
     .menu-header {
         padding-left: 0;
+        padding-right: 0;
     }
 }
 
