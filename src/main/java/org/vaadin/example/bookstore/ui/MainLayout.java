@@ -1,5 +1,11 @@
 package org.vaadin.example.bookstore.ui;
 
+import org.vaadin.example.bookstore.authentication.AccessControl;
+import org.vaadin.example.bookstore.authentication.AccessControlFactory;
+import org.vaadin.example.bookstore.ui.dummy.DummyView;
+import org.vaadin.example.bookstore.ui.inventory.InventoryView;
+import org.vaadin.example.bookstore.ui.profile.ProfileView;
+
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -21,13 +27,8 @@ import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import org.vaadin.example.bookstore.authentication.AccessControl;
-import org.vaadin.example.bookstore.authentication.AccessControlFactory;
-import org.vaadin.example.bookstore.ui.about.AboutView;
-import org.vaadin.example.bookstore.ui.inventory.InventoryView;
 
 /**
  * The main layout. Contains the navigation menu.
@@ -57,8 +58,8 @@ public class MainLayout extends AppLayout implements RouterLayout {
         // Note! Image resource url is resolved here as it is dependent on the
         // execution mode (development or production) and browser ES level
         // support
-        final String resolvedImage = VaadinService.getCurrent().resolveResource(
-                "img/table-logo.png");
+        final String resolvedImage = VaadinService.getCurrent()
+                .resolveResource("img/table-logo.png");
 
         final Image image = new Image(resolvedImage, "");
         final Label title = new Label("Bookstore");
@@ -70,8 +71,14 @@ public class MainLayout extends AppLayout implements RouterLayout {
         addToDrawer(createMenuLink(InventoryView.class, InventoryView.VIEW_NAME,
                 VaadinIcon.EDIT.create()));
 
-        addToDrawer(createMenuLink(AboutView.class, AboutView.VIEW_NAME,
-                VaadinIcon.INFO_CIRCLE.create()));
+        // addToDrawer(createMenuLink(AboutView.class, AboutView.VIEW_NAME,
+        // VaadinIcon.INFO_CIRCLE.create()));
+
+        addToDrawer(createMenuLink(ProfileView.class, "Profile",
+                VaadinIcon.USER.create()));
+
+        addToDrawer(createMenuLink(DummyView.class, "Dummy components",
+                VaadinIcon.WRENCH.create()));
 
         // Create logout button but don't add it yet; admin view might be added
         // in between (see #onAttach())
@@ -129,13 +136,14 @@ public class MainLayout extends AppLayout implements RouterLayout {
                 .createAccessControl();
         if (accessControl.isUserInRole(AccessControl.ADMIN_ROLE_NAME)) {
 
-            // Create extra navigation target for admins
-            registerAdminViewIfApplicable(accessControl);
-
-            // The link can only be created now, because the RouterLink checks
-            // that the target is valid.
-            addToDrawer(createMenuLink(AdminView.class, AdminView.VIEW_NAME,
-                    VaadinIcon.DOCTOR.create()));
+            // // Create extra navigation target for admins
+            // registerAdminViewIfApplicable(accessControl);
+            //
+            // // The link can only be created now, because the RouterLink
+            // checks
+            // // that the target is valid.
+            // addToDrawer(createMenuLink(AdminView.class, AdminView.VIEW_NAME,
+            // VaadinIcon.DOCTOR.create()));
         }
 
         // Finally, add logout button for all users
