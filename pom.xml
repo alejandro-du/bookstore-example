@@ -53,6 +53,16 @@
             <artifactId>vaadin-confirm-dialog-flow</artifactId>
             <version>3.1.0.alpha1</version>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-charts-flow</artifactId>
+            <version>8.1.0.alpha1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-crud-flow</artifactId>
+            <version>3.1.0.alpha1</version>
+        </dependency>
 
         <!-- Added to provide logging output as Vaadin uses -->
         <!-- the unbound SLF4J no-operation (NOP) logger implementation -->

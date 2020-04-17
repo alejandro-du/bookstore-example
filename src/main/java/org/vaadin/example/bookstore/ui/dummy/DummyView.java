@@ -17,6 +17,8 @@
 package org.vaadin.example.bookstore.ui.dummy;
 
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -25,8 +27,22 @@ import org.vaadin.example.bookstore.ui.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.charts.Chart;
+import com.vaadin.flow.component.charts.model.ChartType;
+import com.vaadin.flow.component.charts.model.Configuration;
+import com.vaadin.flow.component.charts.model.Crosshair;
+import com.vaadin.flow.component.charts.model.ListSeries;
+import com.vaadin.flow.component.charts.model.Tooltip;
+import com.vaadin.flow.component.charts.model.XAxis;
+import com.vaadin.flow.component.charts.model.YAxis;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.crud.BinderCrudEditor;
+import com.vaadin.flow.component.crud.Crud;
+import com.vaadin.flow.component.crud.CrudEditor;
+import com.vaadin.flow.component.crud.CrudEditorPosition;
+import com.vaadin.flow.component.crud.CrudFilter;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.html.H1;
@@ -46,6 +62,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.AbstractBackEndDataProvider;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -77,6 +96,9 @@ public class DummyView extends VerticalLayout {
             this.married = married;
         }
     }
+
+    private List<Item> items = Arrays.asList(new Item("foo"), new Item("bar"),
+            new Item("baz"));
 
     public DummyView() {
         add(new H1("Dummy components for testing RTL"));
@@ -131,7 +153,7 @@ public class DummyView extends VerticalLayout {
         RichTextEditor richTextEditor = new RichTextEditor();
 
         GridPro<Item> gridPro = new GridPro<>();
-        gridPro.setItems(new Item("foo"), new Item("bar"), new Item("baz"));
+        gridPro.setItems(items);
         gridPro.addEditColumn(Item::getName)
                 .text((item, val) -> item.setName(val)).setHeader("name");
         gridPro.addEditColumn(Item::isMarried)
@@ -149,9 +171,13 @@ public class DummyView extends VerticalLayout {
         openConfirmDialog.getElement().setProperty("____header",
                 "ConfirmDialog");
 
+        Chart chart = createChart();
+
+        Crud crud = createCrud();
+
         addComponents(tabs, accordion, upload, menuBar, timePicker, progressBar,
                 treeGrid, openNotification, splitLayout, formLayout,
-                richTextEditor, gridPro, openConfirmDialog);
+                richTextEditor, gridPro, openConfirmDialog, chart, crud);
     }
 
     private void addComponents(Component... components) {
@@ -179,6 +205,75 @@ public class DummyView extends VerticalLayout {
         layoutWithFormItems.addFormItem(lastName, "Last name");
 
         return layoutWithFormItems;
+    }
+
+    private Chart createChart() {
+        Chart chart = new Chart();
+
+        Configuration configuration = chart.getConfiguration();
+        configuration.setTitle("Monthly Average Rainfall");
+        configuration.setSubTitle("Source: WorldClimate.com");
+        chart.getConfiguration().getChart().setType(ChartType.COLUMN);
+
+        configuration.addSeries(new ListSeries("Tokyo", 49.9, 71.5, 106.4,
+                129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4));
+        configuration.addSeries(new ListSeries("New York", 83.6, 78.8, 98.5,
+                93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3));
+        configuration.addSeries(new ListSeries("London", 48.9, 38.8, 39.3, 41.4,
+                47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2));
+        configuration.addSeries(new ListSeries("Berlin", 42.4, 33.2, 34.5, 39.7,
+                52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1));
+
+        XAxis x = new XAxis();
+        x.setCrosshair(new Crosshair());
+        x.setCategories("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+                "Sep", "Oct", "Nov", "Dec");
+        configuration.addxAxis(x);
+
+        YAxis y = new YAxis();
+        y.setMin(0);
+        y.setTitle("Rainfall (mm)");
+        configuration.addyAxis(y);
+
+        Tooltip tooltip = new Tooltip();
+        tooltip.setShared(true);
+        configuration.setTooltip(tooltip);
+
+        return chart;
+    }
+
+    private Crud createCrud() {
+
+        Crud<Item> crud = new Crud<>(Item.class, createCrudItemEditor());
+
+        AbstractBackEndDataProvider<Item, CrudFilter> dataProvider = new AbstractBackEndDataProvider<Item, CrudFilter>() {
+            @Override
+            protected Stream<Item> fetchFromBackEnd(
+                    Query<Item, CrudFilter> query) {
+                return items.stream();
+            }
+
+            @Override
+            protected int sizeInBackEnd(Query<Item, CrudFilter> query) {
+                return items.size();
+            }
+        };
+        crud.setDataProvider(dataProvider);
+        crud.setEditorPosition(CrudEditorPosition.ASIDE);
+
+        return crud;
+    }
+
+    private CrudEditor<Item> createCrudItemEditor() {
+        TextField name = new TextField("name");
+        Checkbox married = new Checkbox("married");
+        FormLayout form = new FormLayout(name, married);
+
+        Binder<Item> binder = new Binder<>(Item.class);
+        binder.bind(name, Item::getName, Item::setName);
+        binder.bind(married, Item::isMarried, Item::setMarried);
+
+        return new BinderCrudEditor<>(binder, form);
     }
 
 }
