@@ -25,8 +25,10 @@ import org.vaadin.example.bookstore.ui.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
@@ -36,6 +38,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
+import com.vaadin.flow.component.richtexteditor.RichTextEditor;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -52,6 +55,7 @@ public class DummyView extends VerticalLayout {
 
     public static class Item {
         private String name;
+        private boolean married;
 
         public Item(String name) {
             this.name = name;
@@ -63,6 +67,14 @@ public class DummyView extends VerticalLayout {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public boolean isMarried() {
+            return married;
+        }
+
+        public void setMarried(boolean married) {
+            this.married = married;
         }
     }
 
@@ -116,8 +128,30 @@ public class DummyView extends VerticalLayout {
 
         FormLayout formLayout = createFormLayout();
 
+        RichTextEditor richTextEditor = new RichTextEditor();
+
+        GridPro<Item> gridPro = new GridPro<>();
+        gridPro.setItems(new Item("foo"), new Item("bar"), new Item("baz"));
+        gridPro.addEditColumn(Item::getName)
+                .text((item, val) -> item.setName(val)).setHeader("name");
+        gridPro.addEditColumn(Item::isMarried)
+                .checkbox((item, val) -> item.setMarried(val))
+                .setHeader("married");
+
+        ConfirmDialog confirmDialog = new ConfirmDialog("Unsaved changes",
+                "Do you want to save or discard your changes before navigating away?",
+                "Save", e -> {
+                }, "Discard", e -> {
+                }, "Cancel", e -> {
+                });
+        Button openConfirmDialog = new Button("Open confirm dialog");
+        openConfirmDialog.addClickListener(event -> confirmDialog.open());
+        openConfirmDialog.getElement().setProperty("____header",
+                "ConfirmDialog");
+
         addComponents(tabs, accordion, upload, menuBar, timePicker, progressBar,
-                treeGrid, openNotification, splitLayout, formLayout);
+                treeGrid, openNotification, splitLayout, formLayout,
+                richTextEditor, gridPro, openConfirmDialog);
     }
 
     private void addComponents(Component... components) {
