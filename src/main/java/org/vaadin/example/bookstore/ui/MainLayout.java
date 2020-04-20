@@ -8,8 +8,10 @@ import org.vaadin.example.bookstore.ui.profile.ProfileView;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Direction;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -42,7 +44,7 @@ public class MainLayout extends AppLayout implements RouterLayout {
     private final Button logoutButton;
 
     public MainLayout() {
-
+        UI.getCurrent().setDirection(Direction.RIGHT_TO_LEFT);
         // Header of the menu (the navbar)
 
         // menu toggle

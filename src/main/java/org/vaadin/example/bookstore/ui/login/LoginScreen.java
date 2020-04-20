@@ -1,6 +1,8 @@
 package org.vaadin.example.bookstore.ui.login;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Direction;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
@@ -27,6 +29,8 @@ public class LoginScreen extends FlexLayout {
     private AccessControl accessControl;
 
     public LoginScreen() {
+        UI.getCurrent().setDirection(Direction.RIGHT_TO_LEFT);
+
         accessControl = AccessControlFactory.getInstance().createAccessControl();
         buildUI();
     }
