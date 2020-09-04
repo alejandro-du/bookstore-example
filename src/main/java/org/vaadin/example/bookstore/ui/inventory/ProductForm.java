@@ -100,17 +100,20 @@ public class ProductForm extends Div {
         viewLogic = sampleCrudLogic;
 
         productName = new TextField("Product name");
+        productName.setHelperText("The product name should be inspiring so that it sells like hot cakes 🎂");
         productName.setWidth("100%");
         productName.setRequired(true);
         productName.setValueChangeMode(ValueChangeMode.EAGER);
         content.add(productName);
 
         price = new TextField("Price");
+        price.setHelperText("Remember that good books are never cheap 💸");
         price.setSuffixComponent(new Span("€"));
         price.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
         price.setValueChangeMode(ValueChangeMode.EAGER);
 
         stockCount = new TextField("In stock");
+        stockCount.setHelperComponent(new Span("Usualy greater than 0 🤷‍♂️"));
         stockCount.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
         stockCount.setValueChangeMode(ValueChangeMode.EAGER);
 
@@ -127,6 +130,9 @@ public class ProductForm extends Div {
         content.add(availability);
 
         category = new CheckboxGroup<>();
+        category
+              .addThemeVariants(CheckboxGroupVariant.LUMO_HELPER_ABOVE_FIELD);
+        category.setHelperText("Pick one or more categories 🚸💕👨‍🍳");
         category.setLabel("Categories");
         category.setId("category");
         category.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
